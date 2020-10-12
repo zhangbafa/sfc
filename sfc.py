@@ -47,7 +47,7 @@ def sync_my_groups(msg):
 			selectsql = "select * from posts where sender=? order by createtime desc limit 1 "
 			cursor.execute(selectsql, (sender,))
 			data = cursor.fetchone()
-			if data == None or createtime-data['createtime']>60:
+			if data == None or createtime-data[4]>60:
 				data = [sender, phone[0],content,createtime,type]
 				sql = "INSERT INTO posts(sender,phone,content,createtime,type) VALUES(?,?,?,?,?)"
 				cursor.execute(sql, data)

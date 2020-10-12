@@ -6,7 +6,7 @@ from wxpy import *
 import sqlite3
 
 #启动机器人
-
+'''
 bot = Bot(cache_path=True)
 bot.enable_puid()
 bot.groups(update=True, contact_only=False)
@@ -43,3 +43,12 @@ def sync_my_groups(msg):
    
 embed()
 
+'''
+dbpath = os.path.join(os.path.abspath(os.path.dirname(__file__)),"sfc.db")
+conn = sqlite3.connect(dbpath,check_same_thread=False)
+cursor = conn.cursor()
+sender = "0506"
+selectsql = "select * from posts where sender=? order by createtime desc limit 1 "
+cursor.execute(selectsql, (sender,))
+data = cursor.fetchone()
+print(data[4])
