@@ -6,7 +6,11 @@ from wxpy import *
 import sqlite3
 
 #启动机器人
-'''
+dbpath = os.path.join(os.path.abspath(os.path.dirname(__file__)), "sfc.db")
+conn = sqlite3.connect(dbpath, check_same_thread=False)
+
+
+
 bot = Bot(cache_path=True)
 bot.enable_puid()
 bot.groups(update=True, contact_only=False)
@@ -31,24 +35,25 @@ boring_group[7].update_group(members_details=True)
 #注册消息响应事件，一旦收到铲屎群的消息，就执行下面的代码同步消息。机器人自己在群里发布的信息也进行同步。
 def sync_my_groups(msg):    
     # sync_message_in_groups(msg, my_groups)
-    print(msg)
-    print(dir(msg))
-    print("++++++"*10)
-    print(dir(msg.chat))
-    print(msg.chat.puid)
+    # print(msg)
+    # print(dir(msg))
+    # print("++++++"*10)
+    # print(dir(msg.chat))
+    # print(msg.chat.puid)
+    sender = msg.raw['ActualNickName']
+    content = msg.text
+    print(content)
+    createtime = msg.raw['CreateTime']
+    data = [sender, content, createtime]
+    sql = "INSERT INTO news(sender,content,createtime) VALUES(?,?,?)"
+    cursor = conn.cursor()
+    cursor.execute(sql, data)
+    cursor.close()
+    conn.commit()
+    # conn.close()
     
     # print("puid:"+msg.chat.puid)
     # print(msg.chat.get_avatar("./"+puid+".jpg"))
     print("*"*10)
    
 embed()
-
-'''
-dbpath = os.path.join(os.path.abspath(os.path.dirname(__file__)),"sfc.db")
-conn = sqlite3.connect(dbpath,check_same_thread=False)
-cursor = conn.cursor()
-sender = "0506"
-selectsql = "select * from posts where sender=? order by createtime desc limit 1 "
-cursor.execute(selectsql, (sender,))
-data = cursor.fetchone()
-print(data[4])
