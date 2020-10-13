@@ -16,7 +16,6 @@ conn = sqlite3.connect(dbpath, check_same_thread=False)
 bot = Bot(cache_path=True)
 bot.groups(update=True, contact_only=False)
 # 初始化机器人，电脑弹出二维码，用手机微信扫码登陆
-bot.groups(update=True, contact_only=False)
 # boring_group = bot.groups().search(u'宿州同乡')[0]
 boring_group1 = bot.groups().search(u'老少')[0]
 boring_group2 = bot.groups().search(u'栏杆')[0]
