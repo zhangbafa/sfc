@@ -33,7 +33,7 @@ boring_group4.update_group(members_details=True)
 
 
 @bot.register([boring_group1,boring_group2,boring_group3,boring_group4],msg_types="Text",except_self=False)
-#注册消息响应事件，一旦收到铲屎群的消息，就执行下面的代码同步消息。机器人自己在群里发布的信息也进行同步。
+#注册消息响应事件
 def sync_my_groups(msg):    
     # sync_message_in_groups(msg, my_groups)
 	
