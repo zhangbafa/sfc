@@ -20,7 +20,7 @@ bot.groups(update=True, contact_only=False)
 boring_group1 = bot.groups().search(u'老少')[0]
 boring_group2 = bot.groups().search(u'栏杆')[0]
 boring_group3 = bot.groups().search(u'解集往返宿州')[0]
-boring_group4 = bot.groups().search(u'宿州同乡')[0]
+boring_group4 = bot.groups().search(u'宿州同乡交流便民')[0]
 boring_group1.update_group(members_details=True)
 boring_group2.update_group(members_details=True)
 boring_group3.update_group(members_details=True)
@@ -31,7 +31,7 @@ boring_group4.update_group(members_details=True)
 
 
 
-@bot.register([boring_group1,boring_group2,boring_group3,boring_group4],msg_types="Text",except_self=False)
+@bot.register([boring_group1,boring_group2,boring_group3],msg_types="Text",except_self=False)
 #注册消息响应事件
 def sync_my_groups(msg):    
     # sync_message_in_groups(msg, my_groups)
