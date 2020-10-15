@@ -1,43 +1,38 @@
-# -*- coding: UTF-8 -*-
+# coding: utf-8
 import re
 import time
 import os
 from wxpy import *
 import sqlite3
 
+#顺风车群
+groups = ['栏杆','解集往返宿州','宿州同乡交流便民','青春','老少']
 
-'''
-抓取微信群中的拼车信息，同步到数据库'''
-
-#启动机器人
+#连接数据库
 dbpath = os.path.join(os.path.abspath(os.path.dirname(__file__)), "sfc.db")
 conn = sqlite3.connect(dbpath, check_same_thread=False)
-
+# 初始化机器人，电脑弹出二维码，用手机微信扫码登陆
+my_groups=list()
 bot = Bot(cache_path=True)
 bot.groups(update=True, contact_only=False)
-# 初始化机器人，电脑弹出二维码，用手机微信扫码登陆
-# boring_group = bot.groups().search(u'宿州同乡')[0]
-boring_group1 = bot.groups().search(u'老少')[0]
-boring_group2 = bot.groups().search(u'栏杆')[0]
-boring_group3 = bot.groups().search(u'解集往返宿州')[0]
-boring_group4 = bot.groups().search(u'宿州同乡交流便民')[0]
-boring_group1.update_group(members_details=True)
-boring_group2.update_group(members_details=True)
-boring_group3.update_group(members_details=True)
-boring_group4.update_group(members_details=True)
 
+for (index,name)  in enumerate(groups):
+	#一些不活跃的群可能无法被获取到，可通过在群内发言，或修改群名称的方式来激活
+	try:
+		print(name)
+		boring_group = bot.groups().search(name)[0]
+		boring_group.update_group(members_details=True)
+		my_groups.append(boring_group)
+	except BaseException as e:
+		print("活跃度不足:"+name)
 
-# self.connection = sqlite3.connect(self.database, timeout=3, isolation_level=None,check_same_thread=False)
-
-
-
-@bot.register([boring_group1,boring_group2,boring_group3],msg_types="Text",except_self=False)
 #注册消息响应事件
+@bot.register(my_groups,msg_types="Text",except_self=False)
 def sync_my_groups(msg):    
     # sync_message_in_groups(msg, my_groups)
 	
 	try:
-		if  not msg.is_at:
+		if not msg.is_at:
 			sender = msg.raw['ActualNickName']
 			content = msg.text
 			createtime = msg.raw['CreateTime']
@@ -45,12 +40,9 @@ def sync_my_groups(msg):
 			wxmsg = sender + ":" + str(createtime)
 			print(wxmsg)
 			#1为车找人
-			type=0
-			if "找人" in content:
-				type=1
+			type = 1 if "找人" in content else 0
 
 			cursor = conn.cursor()
-			
 			selectsql = "select * from posts where sender=? order by createtime desc limit 1 "
 			cursor.execute(selectsql, (sender,))
 			result = cursor.fetchone()
