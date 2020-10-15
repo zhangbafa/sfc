@@ -6,15 +6,22 @@ from wxpy import *
 import sqlite3
 
 #启动机器人
-dbpath = os.path.join(os.path.abspath(os.path.dirname(__file__)), "sfc.db")
-conn = sqlite3.connect(dbpath, check_same_thread=False)
+groups = ['栏杆','解集往返宿州','老少爷们','青春共聚','同乡交流']
+'''
+抓取微信群中的拼车信息，同步到数据库'''
 
+#启动机器人
 
-
+my_groups=list()
 bot = Bot(cache_path=True)
-bot.enable_puid()
 bot.groups(update=True, contact_only=False)
+print(bot.groups())
 # 初始化机器人，电脑弹出二维码，用手机微信扫码登陆
-bot.groups(update=True, contact_only=False)
-boring_group = bot.groups()
-print(boring_group)
+# for (index,name)  in enumerate(groups):
+#     print((name))
+    
+#     boring_group= bot.groups().search(name)[0]
+#     boring_group.update_group(members_details=True)
+#     my_groups.append(boring_group)
+
+# embed()
